@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moje Boty - Poker MCP</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>♠️ Poker MCP ♥️</h1>
+            <nav>
+                <a href="/" class="btn btn-secondary">Strona główna</a>
+                <a href="/logout" class="btn btn-secondary">Wyloguj</a>
+            </nav>
+        </header>
+
+        <main>
+            <section class="bots-management">
+                <div class="section-header">
+                    <h2>Moje Boty</h2>
+                    <button id="createBotBtn" class="btn btn-primary">Utwórz nowego bota</button>
+                </div>
+
+                <div class="bots-list">
+                    {% if bots %}
+                        {% for bot in bots %}
+                        <div class="bot-item">
+                            <div class="bot-info">
+                                <div class="bot-icon">🤖</div>
+                                <div>
+                                    <h3>{{ bot.name }}</h3>
+                                    <p class="bot-status">{{ 'Aktywny' if bot.active else 'Nieaktywny' }}</p>
+                                    <p class="bot-date">Utworzony: {{ bot.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
+                                </div>
+                            </div>
+                            <div class="bot-api-key">
+                                <label>Klucz API:</label>
+                                <div class="api-key-container">
+                                    <code class="api-key">{{ bot.api_key }}</code>
+                                    <button class="btn btn-small copy-btn" data-key="{{ bot.api_key }}">Kopiuj</button>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="empty-state">
+                            <p>Nie masz jeszcze żadnych botów. Utwórz swojego pierwszego bota!</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </section>
+
+            <section class="mcp-info">
+                <h3>Jak używać bota z MCP?</h3>
+                <ol>
+                    <li>Skopiuj klucz API swojego bota</li>
+                    <li>Skonfiguruj serwer MCP w pliku <code>opencode.json</code></li>
+                    <li>Użyj narzędzi MCP z kluczem API, aby bot mógł grać w pokera</li>
+                </ol>
+                <pre><code>{
+  "mcpServers": {
+    "poker-mcp": {
+      "command": "python",
+      "args": ["mcp_server.py"],
+      "cwd": "/path/to/poker-mcp"
+    }
+  }
+}</code></pre>
+            </section>
+        </main>
+    </div>
+
+    <div id="createBotModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Utwórz nowego bota</h2>
+            <form id="createBotForm">
+                <label for="botName">Nazwa bota:</label>
+                <input type="text" id="botName" name="botName" required>
+                <button type="submit" class="btn btn-primary">Utwórz</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="/static/js/bots.js"></script>
+</body>
+</html>

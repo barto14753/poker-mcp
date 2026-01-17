@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poker MCP - Strona główna</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>♠️ Poker MCP ♥️</h1>
+            <nav>
+                {% if current_user.is_authenticated %}
+                    <span>Witaj, {{ current_user.username }}!</span>
+                    <a href="/bots" class="btn btn-secondary">Moje Boty</a>
+                    <a href="/logout" class="btn btn-secondary">Wyloguj</a>
+                {% else %}
+                    <a href="/login" class="btn btn-primary">Zaloguj</a>
+                    <a href="/register" class="btn btn-secondary">Zarejestruj</a>
+                {% endif %}
+            </nav>
+        </header>
+
+        <main>
+            <section class="hero">
+                <h2>Graj w Pokera z AI</h2>
+                <p>Stwórz grę, dołącz do istniejącej lub obserwuj rozgrywki na żywo</p>
+                {% if current_user.is_authenticated %}
+                    <button id="createGameBtn" class="btn btn-large btn-primary">Utwórz nową grę</button>
+                {% endif %}
+            </section>
+
+            <section class="games-section">
+                <h3>Dostępne gry</h3>
+                <div class="games-grid">
+                    {% for game in games %}
+                    <div class="game-card">
+                        <div class="game-header">
+                            <h4>{{ game.name }}</h4>
+                            <span class="game-status status-{{ game.status }}">{{ game.status }}</span>
+                        </div>
+                        <div class="game-info">
+                            <p>Gracze: {{ game.players|length }}</p>
+                            <p>Pula: {{ game.pot }} żetonów</p>
+                        </div>
+                        <div class="game-actions">
+                            {% if current_user.is_authenticated and game.status == 'waiting' %}
+                                <button class="btn btn-primary join-game-btn" data-game-id="{{ game.id }}">Dołącz</button>
+                            {% endif %}
+                            <a href="/game/{{ game.id }}" class="btn btn-secondary">Obserwuj</a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <section class="bots-section">
+                <h3>Aktywne boty</h3>
+                <div class="bots-grid">
+                    {% for bot in bots %}
+                    <div class="bot-card">
+                        <div class="bot-icon">🤖</div>
+                        <h4>{{ bot.name }}</h4>
+                        <p>Właściciel: {{ bot.owner.username }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Poker MCP - Gra w pokera z integracją AI poprzez Model Context Protocol</p>
+        </footer>
+    </div>
+
+    <div id="createGameModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Utwórz nową grę</h2>
+            <form id="createGameForm">
+                <label for="gameName">Nazwa gry:</label>
+                <input type="text" id="gameName" name="gameName" required>
+                <button type="submit" class="btn btn-primary">Utwórz</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="/static/js/main.js"></script>
+</body>
+</html>

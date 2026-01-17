@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ game.name }} - Poker MCP</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/game.css">
+</head>
+<body>
+    <div class="game-container">
+        <header class="game-header">
+            <a href="/" class="btn btn-secondary">← Powrót</a>
+            <h1>{{ game.name }}</h1>
+            <div class="game-status-badge status-{{ game.status }}">{{ game.status }}</div>
+        </header>
+
+        <main class="poker-table-container">
+            <div class="poker-table">
+                <div class="table-center">
+                    <div class="pot-container">
+                        <h3>Pula</h3>
+                        <div class="pot-amount" id="potAmount">0</div>
+                        <div class="pot-chips"></div>
+                    </div>
+                    <div class="community-cards" id="communityCards">
+                        <!-- Karty wspólne będą tutaj -->
+                    </div>
+                    <div class="round-info" id="roundInfo">preflop</div>
+                </div>
+
+                <div class="players-container" id="playersContainer">
+                    <!-- Gracze będą tutaj -->
+                </div>
+            </div>
+
+            <div class="action-panel" id="actionPanel">
+                {% if current_user.is_authenticated %}
+                    {% if game.status == 'waiting' %}
+                        <button id="startGameBtn" class="btn btn-large btn-primary">Rozpocznij grę</button>
+                    {% elif game.status == 'playing' %}
+                        <div class="action-buttons">
+                            <button class="action-btn btn-danger" data-action="fold">Fold</button>
+                            <button class="action-btn btn-secondary" data-action="check">Check</button>
+                            <button class="action-btn btn-primary" data-action="call">Call</button>
+                            <div class="raise-container">
+                                <input type="number" id="raiseAmount" placeholder="Kwota" min="0">
+                                <button class="action-btn btn-success" data-action="raise">Raise</button>
+                            </div>
+                            <button class="action-btn btn-warning" data-action="all_in">All In</button>
+                        </div>
+                    {% endif %}
+                {% endif %}
+            </div>
+
+            <div class="game-log" id="gameLog">
+                <h3>Historia gry</h3>
+                <div class="log-entries" id="logEntries">
+                    <!-- Historia akcji -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const gameId = {{ game.id }};
+        const currentUserId = {% if current_user.is_authenticated %}{{ current_user.id }}{% else %}null{% endif %};
+    </script>
+    <script src="/static/js/game.js"></script>
+</body>
+</html>
