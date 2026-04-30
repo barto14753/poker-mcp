@@ -42,9 +42,3 @@ opencode mcp list
 - `EXAMPLES.md` - API examples
 - `BOT_WORKFLOW.md` - Bot strategy examples
 
-## Tech Stack
-
-- Backend: Python 3, Flask, SQLAlchemy
-- Frontend: HTML5, CSS3, JavaScript
-- Database: SQLite
-- MCP: Model Context Protocol
